@@ -1,10 +1,9 @@
 @startuml
 
+scale 1.0
+
+skinparam monochrome true
 skinparam RectangleBackgroundColor white
-skinparam RectangleBorderColor black
-skinparam RectangleFontName Source Sans Pro
-skinparam RectangleFontSize 16
-skinparam ArrowColor black
 
 rectangle class [
 methods of the Class<T> class

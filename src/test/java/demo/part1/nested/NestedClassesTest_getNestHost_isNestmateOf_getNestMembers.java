@@ -11,7 +11,6 @@ import static demo.part1.nested.TopLevelClass.*;
 import static demo.part1.nested.TopLevelClass.NestedClass2.*;
 
 class TopLevelClass {
-
     static class NestedClass1 {}
     static class NestedClass2 {
         static class NestedClass20 {}
