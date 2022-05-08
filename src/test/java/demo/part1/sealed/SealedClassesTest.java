@@ -25,7 +25,7 @@ public class SealedClassesTest extends ReflectionTest {
         assertTrue(clazz.isSealed());
 
         assertEquals(
-            Set.of(Pentagon.class, Triangle.class, Quadrangle.class),
+            Set.of(Triangle.class, Quadrangle.class, Pentagon.class),
             toSet(clazz.getPermittedSubclasses())
         );
 

@@ -1,0 +1,15 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.AccessibleObject {
++ {static} void setAccessible(AccessibleObject[],boolean)
++ void setAccessible(boolean)
++ boolean trySetAccessible()
++ <color:#gray>boolean isAccessible()
++ boolean canAccess(Object)
+..
+<color:#gray>annotations methods
+}
+
+@enduml

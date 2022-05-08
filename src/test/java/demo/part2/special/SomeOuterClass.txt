@@ -1,0 +1,16 @@
+/*
+ * Decompiled with CFR 0.151.
+ */
+class SomeOuterClass {
+
+    SomeOuterClass() {
+    }
+
+    class SomeInnerClass {
+        final /* synthetic */ SomeOuterClass this$0;
+
+        SomeInnerClass(SomeOuterClass this$0) {
+            this.this$0 = this$0;
+        }
+    }
+}

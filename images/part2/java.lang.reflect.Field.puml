@@ -1,0 +1,39 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.Field {
++ void setAccessible(boolean)
+..
++ Class<?> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?> getType()
++ boolean isEnumConstant()
+..
++ Object get(Object)
++ boolean getBoolean(Object)
++ byte getByte(Object)
++ char getChar(Object)
++ short getShort(Object)
++ int getInt(Object)
++ long getLong(Object)
++ float getFloat(Object)
++ double getDouble(Object)
+..
++ void set(Object,Object)
++ void setBoolean(Object,boolean)
++ void setByte(Object,byte)
++ void setChar(Object,char)
++ void setShort(Object,short)
++ void setInt(Object,int)
++ void setLong(Object,long)
++ void setFloat(Object,float)
++ void setDouble(Object,double)
+..
+<color:#gray>annotations and generics methods
+}
+
+@enduml

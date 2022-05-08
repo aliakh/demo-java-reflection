@@ -1,0 +1,33 @@
+/*
+ * Decompiled with CFR 0.151.
+ */
+import java.lang.invoke.MethodHandle;
+import java.lang.runtime.ObjectMethods;
+
+final class SomeRecord extends Record {
+
+    private final int i;
+
+    SomeRecord(int i) {
+        this.i = i;
+    }
+
+    @Override
+    public final String toString() {
+        return ObjectMethods.bootstrap("toString", new MethodHandle[]{SomeRecord.class, "i", "i"}, this);
+    }
+
+    @Override
+    public final int hashCode() {
+        return (int)ObjectMethods.bootstrap("hashCode", new MethodHandle[]{SomeRecord.class, "i", "i"}, this);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return (boolean)ObjectMethods.bootstrap("equals", new MethodHandle[]{SomeRecord.class, "i", "i"}, this, o);
+    }
+
+    public int i() {
+        return this.i;
+    }
+}

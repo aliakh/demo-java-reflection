@@ -1,0 +1,23 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.Constructor {
++ void setAccessible(boolean)
+..
++ Class<T> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?>[] getParameterTypes()
++ int getParameterCount()
++ Class<?>[] getExceptionTypes()
++ boolean isVarArgs()
+..
++ T newInstance(Object)
+..
+<color:#gray>annotations and generics methods
+}
+
+@enduml

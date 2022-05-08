@@ -1,0 +1,28 @@
+/*
+ * Decompiled with CFR 0.151.
+ */
+final class SomeEnum extends Enum<SomeEnum> {
+
+    public static final /* enum */ SomeEnum INSTANCE = new SomeEnum("INSTANCE", 0);
+    private static final /* synthetic */ SomeEnum[] $VALUES;
+
+    public static SomeEnum[] values() {
+        return (SomeEnum[])$VALUES.clone();
+    }
+
+    public static SomeEnum valueOf(String name) {
+        return Enum.valueOf(SomeEnum.class, name);
+    }
+
+    private SomeEnum(String string, int n) {
+        super(string, n);
+    }
+
+    private static /* synthetic */ SomeEnum[] $values() {
+        return new SomeEnum[]{INSTANCE};
+    }
+
+    static {
+        $VALUES = SomeEnum.$values();
+    }
+}

@@ -3,6 +3,7 @@ package demo.part1.records;
 import demo.ReflectionTest;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.RecordComponent;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class RecordClassTest extends ReflectionTest {
     public void recordClass() {
         Class<?> clazz = SomeRecord.class;
         assertTrue(clazz.isRecord());
+        assertTrue(Modifier.isFinal(clazz.getModifiers()));
 
         assertEquals(
             Set.of("private final int demo.part1.records.SomeRecord.i"),
