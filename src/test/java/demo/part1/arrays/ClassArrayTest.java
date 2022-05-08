@@ -23,9 +23,9 @@ public class ClassArrayTest {
         Integer[] array = new Integer[]{2};
         assertEquals(1, Array.getLength(array));
 
-        assertEquals(2, Array.getInt(array, 0));
-        Array.setInt(array, 0, 3);
-        assertEquals(3, Array.getInt(array, 0));
+        assertEquals(2, Array.get(array, 0));
+        Array.set(array, 0, 3);
+        assertEquals(3, Array.get(array, 0));
     }
 
     @Test

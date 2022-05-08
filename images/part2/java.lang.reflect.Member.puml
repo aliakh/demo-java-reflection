@@ -1,0 +1,12 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+interface java.lang.reflect.Member {
++ Class<?> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+}
+
+@enduml

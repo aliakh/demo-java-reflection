@@ -1,0 +1,19 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.Parameter {
++ Executable getDeclaringExecutable()
++ boolean isNamePresent()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?> getType()
++ boolean isVarArgs()
++ boolean isImplicit()
+..
+<color:#gray>annotations and generics methods
+}
+
+@enduml

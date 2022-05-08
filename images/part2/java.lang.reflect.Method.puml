@@ -1,0 +1,26 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.Method {
++ void setAccessible(boolean)
+..
++ Class<?> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?>[] getParameterTypes()
++ int getParameterCount()
++ Class<?>[] getExceptionTypes()
++ boolean isVarArgs()
+..
++ Class<?> getReturnType()
++ Object invoke(Object,Object)
++ boolean isBridge()
++ boolean isDefault()
+..
+<color:#gray>annotations and generics methods
+}
+
+@enduml

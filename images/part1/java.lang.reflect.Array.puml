@@ -1,0 +1,31 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.Array {
++ {static} Object newInstance(Class<?>,int)
++ {static} Object newInstance(Class<?>,int...)
++ {static} int getLength(Object)
+..
++ {static} Object get(Object,int)
++ {static} boolean getBoolean(Object,int)
++ {static} byte getByte(Object,int)
++ {static} char getChar(Object,int)
++ {static} short getShort(Object,int)
++ {static} int getInt(Object,int)
++ {static} long getLong(Object,int)
++ {static} float getFloat(Object,int)
++ {static} double getDouble(Object,int)
+..
++ {static} void set(Object,int,Object)
++ {static} void setBoolean(Object,int,boolean)
++ {static} void setByte(Object,int,byte)
++ {static} void setChar(Object,int,char)
++ {static} void setShort(Object,int,short)
++ {static} void setInt(Object,int,int)
++ {static} void setLong(Object,int,long)
++ {static} void setFloat(Object,int,float)
++ {static} void setDouble(Object,int,double)
+}
+
+@enduml

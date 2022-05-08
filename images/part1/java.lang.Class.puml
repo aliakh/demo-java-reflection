@@ -1,10 +1,12 @@
 @startuml
 
-scale 1.0
-skinparam monochrome true
 skinparam RectangleBackgroundColor white
+skinparam RectangleBorderColor black
+skinparam RectangleFontName Source Sans Pro
 
-rectangle class [
+skinparam ArrowColor black
+
+rectangle Class [
 methods of the Class<T> class
 ]
 
@@ -27,7 +29,7 @@ rectangle modifiers [
 methods for modifiers
 --
 int getModifiers()
-..
+
 boolean isInterface()
 boolean isArray()
 boolean isPrimitive()
@@ -47,10 +49,10 @@ methods for inheritance
 --
 Class<? super T> getSuperclass()
 Class<?>[] getInterfaces()
-..
+
 boolean isInstance(Object obj)
 boolean isAssignableFrom(Class<?> cls)
-..
+
 T cast(Object obj)
 Class<? extends U> asSubclass(Class~<U> cls)
 ]
@@ -61,15 +63,15 @@ methods for nested classes
 boolean isAnonymousClass()
 boolean isLocalClass()
 boolean isMemberClass()
-..
+
 Class<?>[] getClasses()
 Class<?>[] getDeclaredClasses()
-..
+
 Method getEnclosingMethod()
 Constructor<?> getEnclosingConstructor()
-Class<?> getEnclosingClass()
 Class<?> getDeclaringClass()
-..
+Class<?> getEnclosingClass()
+
 Class<?> getNestHost()
 boolean isNestmateOf(Class<?> cls)
 Class<?>[] getNestMembers()
@@ -80,19 +82,19 @@ methods for restricted classes
 --
 boolean isEnum()
 T[] getEnumConstants()
-..
+
 boolean isRecord()
 RecordComponent[] getRecordComponents()
-..
+
 boolean isSealed()
 Class<?>[] getPermittedSubclasses()
 ]
 
-class -down- primitives
-class -down- arrays
-class -down-- modifiers
-class -down- inheritance
-class -down-- nested_classes
-class -down- restricted_classes
+Class -down- primitives
+Class -down- arrays
+Class -down-- modifiers
+Class -down- inheritance
+Class -down-- nested_classes
+Class -down- restricted_classes
 
 @enduml
