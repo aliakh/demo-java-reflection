@@ -5,6 +5,8 @@
 
 Reflection is the ability of an application to examine and modify its structure and behavior at runtime. The ability to _introspect structure_ consists in the presence of the Core Reflection API for reading classes and their fields, methods, constructors, member classes and member interfaces. The ability to _modify behavior_ consists in the presence of this API for getting and setting field values, invoking methods, and creating new instances using constructors.
 
+The `Member` interface and its implementations - the `Field`, `Method`, and `Constructor` classes represent reflected fields and methods (which are members of classes and interfaces, according to the Java Language Specification) and constructors (which are not members).
+
 <sub>This article is based on the Java 17 implementation in Oracle OpenJDK.</sub>
 
 
@@ -12,33 +14,35 @@ Reflection is the ability of an application to examine and modify its structure 
 
 According to the Java Language Specification, class members include fields, methods, member classes and member interfaces. A class can declare members in its body or inherit them from its superclass and superinterfaces. Notice that constructors are not class members and therefore are not inherited.
 
-The entry point for the Core Reflection API is the `Class` class. Among other methods, this class has methods for discovering fields, methods, constructors, member classes and member interfaces.
+The entry point for the Core Reflection API is the `Class` class. Among other methods, this class has the following methods for discovering fields, methods, constructors, member classes and member interfaces of the given type:
 
 ![methods of the Class class](/images/part2/methods_of_the_Class_class.png)
 
-Methods grouped by the first category, return either an array of all constructs (members and constructors) or a single construct by its name and/or parameter types.
+Methods grouped by one category, return either an array of all constructs (members and constructors) or a single construct by its name and/or parameter types.
 
-Methods grouped by the second category, return constructs by their accessibility and declaration. Methods that contain the fragment "declared" in their name, return all the declared constructs of the class or interface, including _public_, _protected_, _package_, and _private_ constructs, but excluding inherited constructs. Methods that do not contain this fragment, return all the _public_ constructs of the class or interface, including those declared by the class or interface and those inherited (except constructors) from superclasses and superinterfaces.
+Methods grouped by another category, return constructs by their accessibility and declaration. Methods that contain the fragment "declared" in their name, return all the declared constructs of the class or interface, including _public_, _protected_, _package access_, and _private_ constructs, but excluding inherited constructs. Methods that do not contain this fragment, return all the _public_ constructs of the class or interface, including those declared by the class or interface and those inherited (except constructors) from superclasses and superinterfaces.
 
 [code examples](https://github.com/aliakh/demo-java-reflection/blob/master/src/test/java/demo/part2/discovery/code_examples.md)
 
 
 ## Using members and constructors
 
-After you discover members and constructors, you can use implementations of the `Member` interface (the `Field`, `Method`, and `Constructor` classes) to _introspect structure_ and _modify behavior_ reflected fields and methods (which are members, according to the Java Language Specification) and constructors (which are not members). The `Parameter` class represents reflected parameters of these methods and constructors.
+The `Member` interface and its implementations have the following type hierarchy, which represents reflected fields, methods, and constructors.
+
+![reflection members hierarchy](/images/part2/reflection_members_hierarchy.png)
+
+Additionally there is the `Parameter` class that represents reflected parameters of methods and constructors.
 
 
 ### The Member interface
 
 The `Member` interface is a superinterface for the `Field`, `Method`, and `Constructor` classes.
 
-![reflection members hierarchy](/images/part2/reflection_members_hierarchy.png)
-
 This interface declares the following methods:
 
 
 
-* `Class<?> getDeclaringClass()` - returns the `Class` object representing the class or interface that declares the member or constructor
+* `Class&lt;?> getDeclaringClass()` - returns the `Class` object representing the class or interface that declares the member or constructor
 * `String getName()` - returns the simple name of the reflected member or constructor
 * `int getModifiers()` - returns the Java language modifiers for the member or constructor
 * `boolean isSynthetic()` - returns `true` if and only if this member or constructor was introduced by the Java compiler
@@ -70,6 +74,14 @@ module target.module {
 ```
 
 
+Here are some methods that this class declares:
+
+
+
+* `boolean canAccess(Object obj)` - returns `true` if and only if the caller can access this reflected object
+* `void setAccessible(boolean flag)` - sets the `accessible` flag for this reflected object to the given boolean value and throws `InaccessibleObjectException` if the access control cannot be suppressed
+* `boolean trySetAccessible()` - sets the `accessible` flag for this reflected object to `true` and returns the `true` if the access control is suppressed and `false` otherwise
+
 By default, Java language access control allows the use of:
 
 
@@ -79,15 +91,7 @@ By default, Java language access control allows the use of:
 * _protected_ members only inside their package or subclasses
 * _public_ members outside their module only if they are declared in an _exported_ package, and the caller module _requires_ their module
 
-Here are some methods that this class declares:
-
-
-
-* `boolean canAccess(Object obj)` - returns `true` if and only if the caller can access this reflected object
-* `void setAccessible(boolean flag)` - sets the `accessible` flag for this reflected object to the given boolean value and throws `InaccessibleObjectException` if the access control cannot be suppressed
-* `boolean trySetAccessible()` - sets the `accessible` flag for this reflected object to `true` and returns the `true` if the access control is suppressed and `false` otherwise
-
-Java language access control can be always suppressed by setting the `accessible` flag to `true` only if the caller class and the target class are in the same module. If they are in different modules, the access control can be suppressed only if any of the following hold:
+Java language access control can be always suppressed by setting the `accessible` flag to `true` if the caller class and the target class are in the same module. If they are in different modules, the access control can be suppressed only if any of the following conditions are met:
 
 
 
@@ -118,7 +122,7 @@ Here are some methods that this class declares:
 
 
 
-* `Class<?> getType()` - returns a `Class` object that identifies the declared type for the field
+* `Class&lt;?> getType()` - returns a `Class` object that identifies the declared type for the field
 * `Object get(Object obj)` - returns the value of the field on the specified object <sup><code>(*)</code></sup>
 * `void set(Object obj, Object value)` - sets the field to the specified new value on the specified object <sup><code>(*)</code></sup>
 
@@ -176,8 +180,8 @@ Here are some methods that this class declares:
 
 * `int getParameterCount()` - returns the number of formal parameters (whether explicitly declared or implicitly declared or neither)
 * `Parameter[] getParameters()` - returns an array of `Parameter` objects representing all the parameters
-* `abstract Class<?>[] getParameterTypes()` - returns an array of `Class` objects that represent the formal parameter types
-* `abstract Class<?>[] getExceptionTypes()` - returns an array of `Class` objects that represent the types of thrown exceptions
+* `abstract Class&lt;?>[] getParameterTypes()` - returns an array of `Class` objects that represent the formal parameter types
+* `abstract Class&lt;?>[] getExceptionTypes()` - returns an array of `Class` objects that represent the types of thrown exceptions
 * `boolean isVarArgs()` - returns `true` if and only if this method is declared to take a variable number of arguments
 
 
@@ -189,7 +193,7 @@ Here are some methods that this class declares:
 
 
 
-* `Class<?> getReturnType()` - returns a `Class` object that represents the formal return type of the method
+* `Class&lt;?> getReturnType()` - returns a `Class` object that represents the formal return type of the method
 * `Object invoke(Object obj, Object... args)` - invokes the reflected method represented by this `Method` object on the specified object with the specified parameters
 * `boolean isBridge()` - returns `true` if and only if this method is a bridge method
 * `boolean isDefault()` - returns `true` if and only if this method is a _default_ method
@@ -248,7 +252,7 @@ assertEquals(1, method.invoke(object, 1));
 
 ### The Constructor class
 
-The `Constructor<T>` class (where `T` is the class in which the constructor is declared) represents a reflected constructor. The class has methods for reading information about the constructor (name, modifiers, parameter types, and thrown exception types) and creating new instances.
+The `Constructor&lt;T>` class (where `T` is the class in which the constructor is declared) represents a reflected constructor. The class has methods for reading information about the constructor (name, modifiers, parameter types, and thrown exception types) and creating new instances.
 
 Here is a method that this class declares:
 
@@ -317,12 +321,12 @@ Here are some methods that this class declares:
 * `boolean isNamePresent()` - returns `true` if and only if the parameter has a name according to the _class_ file
 * `String getName()` - returns the name of the parameter
 * `int getModifiers()` - returns the Java language modifiers for the parameter
-* `Class<?> getType()` - returns a `Class` object that identifies the declared type for the parameter
+* `Class&lt;?> getType()` - returns a `Class` object that identifies the declared type for the parameter
 * `boolean isSynthetic()` - returns `true` if and only if this parameter is neither explicitly nor implicitly declared in the source code
 * `boolean isVarArgs()` - returns `true` if and only if this method is declared to take a variable number of arguments
 * `boolean isImplicit()` - returns `true` if and only if this parameter is implicitly declared in the source code
 
-If the parameter name is present in the _class_ file, then the `getName` method returns the actual parameter name. Otherwise, this method synthesizes the name in the form _argN_, where _N_ is the index of the parameter. Notice that _class_ files do not store actual parameter names by default (mainly because larger _class_ files can use more memory in the Java VM). To store parameter names in _class_ files, source _java_ files should be compiled with the _-parameters_ option.
+If the parameter name is present in the _class_ file, then the `getName` method returns the actual parameter name. Otherwise, this method synthesizes the name in the form _argN_, where _N_ is the index of the parameter. Notice that _class_ files do not store actual parameter names by default (mainly because larger _class_ files can use more memory in the Java VM). To store parameter names in _class_ files, the source Java files should be compiled with the _-parameters_ option.
 
 
 ##### Code examples
@@ -363,12 +367,12 @@ assertEquals(int.class, parameter.getType());
 
 ## Special classes
 
-Sometimes reflection reveals constructs that are not explicitly declared in the source code. Some of these are _implicit_ constructs whose presence is mandated by the Java Language Specification (for example, default no-argument constructors). Others are _synthetic_ constructs that are neither explicitly nor implicitly declared in the source code but introduced by the Java compiler (for example, bridge methods). This is because some features of the Java platform are implemented in the overlying Java language layer to make the underlying Java VM layer more simple and versatile. Examples of such features include (but are not limited to) nested classes and interfaces, record classes, and enum classes.
+Sometimes reflection reveals constructs that are not explicitly declared in the source code. Some of these are _implicit_ constructs whose presence is mandated by the Java Language Specification (for example, default no-argument constructors). Others are _synthetic_ constructs that are neither explicitly nor implicitly declared in the source code but generated by the Java compiler (for example, bridge methods). This is because some features of the Java platform are implemented in the overlying Java language layer to make the underlying Java VM layer more simple and versatile. Examples of such features include (but are not limited to) nested classes and interfaces, record classes, and enum classes.
 
 
 ### Nested classes and interfaces
 
-Nested classes are classes declared within the body of another class or interface declaration. Nested classes may be static or non-static member classes, local classes, or anonymous classes. Some kinds of nested classes, that are not explicitly or implicitly _static_, and therefore can refer to instances of the enclosing classes, are inner classes.
+Nested classes are classes declared within the body of another class or interface declaration. Nested classes may be static or non-static member classes, local classes, or anonymous classes. Some kinds of nested classes that are not explicitly or implicitly _static_ (and therefore can refer to instances of the enclosing classes) are inner classes.
 
 
 ##### Code examples
@@ -384,7 +388,7 @@ class OuterClass {
 ```
 
 
-The following code shows which synthetic field (a reference to an instance of the enclosing class) and constructor (to set this field) the Java compiler generates for the non-static member class.
+The following code shows which synthetic field (a reference to an instance of the enclosing class) and constructor (to set that field) the Java compiler generates for that inner class.
 
 
 ```
@@ -402,7 +406,7 @@ assertEquals("demo.SomeOuterClass$SomeInnerClass(demo.SomeOuterClass)", toString
 ```
 
 
-So these are the actual classes that the Java compiler generates from these top-level class with the non-static member class:
+So these are the actual classes that the Java compiler generates from that non-static member class:
 
 
 ```
@@ -422,14 +426,13 @@ class SomeOuterClass {
 
 ### Record classes
 
-Record classes are restricted kinds of classes that define a simple aggregate of values. From record components in the header of a record class declaration, the Java compiler creates the following implicit constructs:
+Record classes are restricted kinds of classes that define an immutable aggregate of values. From record components in the record header, the Java compiler created the following implicit constructs:
 
 
 
-* a _private final_ field (for each component in the header)
-* a _public_ accessor method (for each component in the header)
+* a _private final_ field and a _public_ accessor method (for each record component in the record header)
 * a canonical constructor whose signature is the same as the record header
-* _public final_ methods `equals`, `hashCode`, `toString`
+* _public final_ methods `equals`, `hashCode` and `toString`
 
 
 ##### Code examples
@@ -590,6 +593,8 @@ final class SomeEnum extends Enum<SomeEnum> {
 
 ## Conclusion
 
-The `Class` class is the entry point of the Core Reflection API. Once you get the `Class` object for a class or interface, you can discover and use its fields, methods, constructors, nested classes and nested interfaces. To properly use reflected fields, methods, and constructors you should study the `Member` interface and its implementation hierarchy. In typical cases, reflective access consists of getting and setting field values in various serializing/deserializing operations, bypassing access control for fields and methods in legacy code, and creating new instances at runtime when the exact class is unknown at compile time.
+The `Class` class is the entry point of the Core Reflection API. Once you get the `Class` object for a class or interface, you can discover and use its fields, methods, constructors, member classes and member interfaces.
+
+In typical cases, reflective access for members and constructors consists of getting and setting field values in various serializing/deserializing operations, bypassing access control for fields and methods in legacy code, and creating new instances at runtime when the exact class is unknown at compile time.
 
 Complete code examples are available in the [GitHub repository](https://github.com/aliakh/demo-java-reflection).
