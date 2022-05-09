@@ -19,11 +19,11 @@ There are two kinds of types in the Java language: primitive types and reference
 
 ## The Class class
 
-The entry point for the Core Reflection API is the `Class` class.
+The entry point for the Core Reflection API is the `Class` class. Among other methods, this class has the following methods for discovering various parameters of the given type:
 
 ![methods of the Class class](/images/part1/methods_of_the_Class_class.png)
 
-There are three ways to get a `Class` object statically (respectively for objects, reference and primitive types, primitive types) at compile-time and one way to do the same dynamically at runtime (for reference types only).
+There are three ways to get a `Class` object at compile-time (respectively for objects, reference and primitive types, primitive types) and one way to do the same at runtime (for reference types only).
 
 For an object (class instance or array), you can use the `Object::getClass` method on that object.
 
@@ -73,15 +73,17 @@ In the Java language, different constructs (classes, interfaces, fields, methods
 
 
 
-* `abstract`, `final`
+* `abstract` and `final`
 * `native`
-* `private`, `protected`, `public`
+* `private`
+* `protected`
+* `public`
 * `static`
 * `strictfp`
 * `synchronized`
 * `transient`
 * `volatile`
-* `sealed`, `non-sealed`
+* `sealed` and `non-sealed`
 
 <sub>In addition, in the Java VM, there is an additional `interface` modifier, which is considered a pseudo-modifier in the Java language.</sub>
 
@@ -89,7 +91,7 @@ The `Class` class contains a method for determining modifiers:
 
 
 
-* `int getModifiers()` - returns the Java language modifiers `public`, `protected`, `private`, `final`, `static`, `abstract`, and `interface` for this `Class` object, encoded as bits in an integer
+* `int getModifiers()` - returns the Java language modifiers `public`, `protected`, `private`, `final`, `static`, `abstract`, and `interface` for this `Class` object, encoded in an integer
 
 
 ```
@@ -260,7 +262,7 @@ assertEquals(2, Array.getInt(array, 0));
 
 The `Class` class has three groups of methods for analyzing type inheritance.
 
-The first subgroup of these methods is for determining the direct supertypes (that is, which class and interfaces are mentioned in the `extends` and `implements` clauses of the class or interface declaration):
+The first subgroup of these methods is for determining the _direct supertypes_ (that is, which class and interfaces are mentioned in the `extends` and `implements` clauses of the class or interface declaration):
 
 
 
@@ -269,16 +271,16 @@ The first subgroup of these methods is for determining the direct supertypes (th
 
 
 ```
-Class<?> clazz = ArrayList.class;
-assertEquals(AbstractList.class, clazz.getSuperclass());
+Class<?> clazz = Integer.class;
+assertEquals(Number.class, clazz.getSuperclass());
 assertArrayEquals(
-   new Class[]{List.class, RandomAccess.class, Cloneable.class, Serializable.class},
+   new Class[]{Comparable.class, Constable.class, ConstantDesc.class},
    clazz.getInterfaces()
 );
 ```
 
 
-The second subgroup of these methods is for determining whether one type can be cast to another type (that is, whether one type is the same type or a subtype of another type):
+The second subgroup of these methods is for determining _whether one type can be cast to another type_ (that is, whether one type is the same type or a subtype of another type):
 
 
 
@@ -294,14 +296,14 @@ assertTrue(Number.class.isAssignableFrom(Integer.class));
 ```
 
 
-The third subgroup of these methods is for casting one type to another type:
+The third subgroup of these methods is for _casting one type to another type_:
 
 
 
 * `T cast(Object obj)` - casts the specified `Object` parameter to the type represented by this `Class` object
 * `<U> Class<? extends U> asSubclass(Class<U> cls)` - casts this `Class` object to a subclass of the class represented by the specified `Class` parameter
 
->The `cast` method is the runtime equivalent of the compile-time _cast operator_.
+>The `cast` method is the runtime equivalent of the compile-time _cast_ operator.
 
 
 ```
@@ -326,7 +328,7 @@ Class<? extends Integer> integerClass = number.getClass().asSubclass(Integer.cla
 
 ## Special classes and interfaces
 
-The `Class` class has methods for analyzing special kinds of types: types of different nesting (top-level and nested classes and interfaces), restricted types (enums, records, sealed classes and interfaces), and types with special implementation (synthetic and hidden classes and interfaces).
+In addition to the regular types (classes and interfaces) in the Java language, there are special types: types of different enclosing scopes (top-level and nested classes and interfaces), restricted types (enum classes, record classes, sealed classes and interfaces), and types with special implementation (synthetic and hidden classes and interfaces).
 
 
 ### Nested classes and interfaces
@@ -342,9 +344,9 @@ The `Class` class has four groups of methods for analyzing nested classes and in
 
 ##### Kinds of nested classes
 
-A member class is a class whose declaration is directly enclosed in the body of another class or interface declaration. A local class is a class declared within a block. An anonymous class is a class without a name, also declared within a block, that is implicitly declared by a _class instance creation expression_ _or_ by an enum constant with a class body.
+A member class is a class whose declaration is directly enclosed in the body of another class or interface declaration. A local class is a class declared within a block. An anonymous class is a class without a name, also declared within a block, that is implicitly declared by a class instance creation expression _or_ by an enum constant with a class body.
 
-The first subgroup of these methods is for determining the kind of nested classes:
+The first subgroup of these methods is for determining the _kind of nested classes_:
 
 
 
@@ -355,9 +357,9 @@ The first subgroup of these methods is for determining the kind of nested classe
 
 ##### Public vs. declared members
 
-A class inherits _public_, _protected_, _package access_ (both _static_ and non-_static_) but not _private_ member classes and member interfaces from its superclass and superinterfaces.
+A class inherits _public_, _protected_, _package access_ (both static and non-static) but not _private_ member classes and member interfaces from its superclass and superinterfaces.
 
-The second subgroup of these methods is for determining member classes and member interfaces:
+The second subgroup of these methods is for determining _member classes and member interfaces_:
 
 
 
@@ -367,7 +369,7 @@ The second subgroup of these methods is for determining member classes and membe
 
 ##### Enclosing vs. declaring context
 
-Only a member class has a declaring class - the top-level class or interface of which it is a member. A local class or an anonymous class is not a member of any class or interface and therefore does not have a declaring class.
+Any nested class (member class, local class, or anonymous class) has an immediately enclosing class. Only a member class has a declaring class - the top-level class of which it is a member.
 
 The third subgroup of these methods is for determining enclosing context (method, constructor, or class) for local and anonymous classes and declaring context (only class) for member classes:
 
@@ -381,11 +383,9 @@ The third subgroup of these methods is for determining enclosing context (method
 
 ##### Nest-Based Access Control
 
-Nest-based access control (since Java 11) is a new implementation of nested classes that allows them to access other private members without the Java compiler having to insert _synthetic_ accessibility-broadening bridge methods.
+Nest-based access control (since Java 11) is a new implementation of nested classes that allows them to access each other's _private_ members without the need for a Java compiler to generate synthetic bridge methods.
 
-<sub>Nest-based access control replaced synthetic bridge methods used to access <em>private</em> members between a top-level class and its nested classes.</sub>
-
-A top-level class, plus all classes nested within it, are forming a nest. All classes in a nest allow mutual access to their _private_ members. Every class belongs to exactly one nest.  A top-level class that forms the nest is described as a nest host. Two classes in a nest are described as nestmates.
+A top-level class, plus all classes nested within it, are forming a nest. All classes in a nest allow mutual access to their _private_ members. Every class belongs to exactly one nest. A top-level class that forms the nest is described as a nest host. Two classes in a nest are described as nestmates.
 
 The fourth subgroup of these methods is for determining nests:
 
@@ -436,7 +436,7 @@ assertEquals(Enum.class, clazz.getSuperclass());
 
 Synthetic classes and interfaces (since Java 1.3) are generated by the Java compiler and are not explicitly or implicitly declared.
 
-<sub>A construct emitted by a Java compiler is marked as <em>synthetic</em> if it does not correspond to a construct declared explicitly or implicitly in the source code (unless the emitted construct is a <em>class initialization method</em>).</sub>
+<sub>A construct emitted by a Java compiler is marked as <em>synthetic</em> if it does not correspond to a construct declared explicitly or implicitly in the source code (unless the emitted construct is a class initialization method).</sub>
 
 The `Class` class declares the method for determining synthetic classes:
 
@@ -458,9 +458,9 @@ System.out.println(clazz.getSimpleName()); // SyntheticClassTest$$Lambda$363/0x0
 
 ### Hidden classes and interfaces
 
-Hidden classes and interfaces (since Java 15) are a new implementation of runtime generated classes that are not visible to other classes either at compile-time or runtime by class loaders (for example, by the `Class::forName` method). A hidden class is created by invoking the `java.lang.invoke.Lookup::defineHiddenClass` method with the _class_ file as the byte array argument.
+Hidden classes and interfaces (since Java 15) are a new implementation of runtime generated classes that are not visible to other classes either at compile-time or runtime by class loaders (for example, by the `Class::forName` method). The hidden class is only dynamically created by invoking the `java.lang.invoke.Lookup::defineHiddenClass` method with the _class_ file as the byte array argument.
 
-<sub>Hidden classes have replaced the anonymous classes created by the `sun.misc.Unsafe::defineAnonymousClass` method that was deprecated in Java 15 and removed in Java 17.</sub>
+<sub>Hidden classes had replaced the anonymous classes that were created by the `sun.misc.Unsafe::defineAnonymousClass` method (which was deprecated in Java 15 and removed in Java 17).</sub>
 
 The `Class` class declares the method for determining hidden classes:
 
@@ -588,8 +588,8 @@ assertEquals(
 
 ## Conclusion
 
-The `Class` class is the entry point for the Core Reflection API. Once you obtain a `Class` object for a type, you can determine many of the properties of this type: the kind of type (primitive type, array type, class or interface), modifiers, specification and implementation details.
+The `Class` class is the entry point for the Core Reflection API. Once you obtain a `Class` object for a type, you can determine the properties of that type: the kind of type (primitive type, array type, class or interface), modifiers, specification and implementation details.
 
-Structures in the source code do not always have a one-to-one correspondence with structures in the generated _class_ file. In some cases, reflection reveals that the generated _class_ file has _implicit_ constructs (absent in the source code but mandated by the Java Language Specification) or _synthetic_ constructs (generated by a Java compiler in a way that is not specified by this specification).
+Structures in the Java source code do not always have a one-to-one correspondence with structures in the generated _class_ file. In some cases, reflection reveals that the generated class file has _implicit_ constructs (absent in the source code but mandated by the Java Language Specification) or _synthetic_ constructs (generated by a Java compiler in a way that is not specified by this specification).
 
 Complete code examples are available in the [GitHub repository](https://github.com/aliakh/demo-java-reflection).
