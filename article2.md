@@ -31,7 +31,7 @@ The `Member` interface and its implementations have the following type hierarchy
 
 ![reflection members hierarchy](/images/part2/reflection_members_hierarchy.png)
 
-Additionally there is the `Parameter` class that represents reflected parameters of methods and constructors.
+Additionally, there is the `Parameter` class that represents reflected parameters of methods and constructors.
 
 
 ### The Member interface
@@ -42,7 +42,7 @@ This interface declares the following methods:
 
 
 
-* `Class&lt;?> getDeclaringClass()` - returns the `Class` object representing the class or interface that declares the member or constructor
+* `Class<?> getDeclaringClass()` - returns the `Class` object representing the class or interface that declares the member or constructor
 * `String getName()` - returns the simple name of the reflected member or constructor
 * `int getModifiers()` - returns the Java language modifiers for the member or constructor
 * `boolean isSynthetic()` - returns `true` if and only if this member or constructor was introduced by the Java compiler
@@ -54,25 +54,11 @@ This interface declares the following methods:
 
 The `AccessibleObject` class is an abstract superclass of the `Field`, `Method`, and `Constructor` classes that allows suppressing checks for Java language access control.
 
-Java language access control is tightly connected with two concepts of the Java Platform Module System (introduced in Java 9): _readability_ and _accessibility_. Readability is the basis of _reliable configuration_ and specifies that the caller module can be guaranteed to read types in the target module. Readability is established using the `requires` directive in the caller module. Accessibility is the basis of _strong encapsulation_ and specifies what packages (and _public_ types in them) the target module exposes to the caller module. Accessibility is established using the `exports` directive in the target module.
+Java language access control is connected with two concepts of the Java Platform Module System: readability and accessibility.
 
+Readability is the basis of _reliable configuration_ and specifies that the caller module can be guaranteed to read types in the target module. Readability is established using the `requires` directive in the caller module.
 
-```
-module caller.module {
-    requires target.module; // for readability
-}
-```
-
-
-
-
-
-```
-module target.module {
-    exports target.package to caller.module; // for accessibility
-}
-```
-
+Accessibility is the basis of _strong encapsulation_ and specifies what packages (and _public_ types in them) the target module exposes to the caller module. Accessibility is established using the `exports` directive in the target module.
 
 Here are some methods that this class declares:
 
@@ -100,10 +86,16 @@ Java language access control can be always suppressed by setting the `accessible
 * the target module use the `opens` directive from the target package to the caller module
 * the target class is in an _unnamed_ or _open_ module
 
-_Shallow reflection_ is access without using the `accessible` flag. Only _public_ members of _public_ classes in exported packages can be accessed. The `exports` directive grants the package access at compile-time and for shallow reflection at runtime. _Deep reflection_ is access with setting the `accessible` flag to `true`. Any members of any classes in any package (whether exported or not) can be accessed. The `opens` directive grants the package access for deep reflection at runtime.
+_Shallow reflection_ is access without using the `accessible` flag. Only _public_ members of _public_ classes in exported packages can be accessed. The `exports` directive grants the package access at compile-time and for shallow reflection at runtime.
+
+_Deep reflection_ is access with setting the `accessible` flag to `true`. Any members of any classes in any package (whether exported or not) can be accessed. The `opens` directive grants the package access for deep reflection at runtime.
 
 
 ```
+module caller.module {
+    requires target.module; // for readability
+}
+
 module target.module {
     exports target.package to caller.module; // to access public members of public classes
     opens target.package to caller.module; // to access any members of any classes
@@ -122,7 +114,7 @@ Here are some methods that this class declares:
 
 
 
-* `Class&lt;?> getType()` - returns a `Class` object that identifies the declared type for the field
+* `Class<?> getType()` - returns a `Class` object that identifies the declared type for the field
 * `Object get(Object obj)` - returns the value of the field on the specified object <sup><code>(*)</code></sup>
 * `void set(Object obj, Object value)` - sets the field to the specified new value on the specified object <sup><code>(*)</code></sup>
 
@@ -180,8 +172,8 @@ Here are some methods that this class declares:
 
 * `int getParameterCount()` - returns the number of formal parameters (whether explicitly declared or implicitly declared or neither)
 * `Parameter[] getParameters()` - returns an array of `Parameter` objects representing all the parameters
-* `abstract Class&lt;?>[] getParameterTypes()` - returns an array of `Class` objects that represent the formal parameter types
-* `abstract Class&lt;?>[] getExceptionTypes()` - returns an array of `Class` objects that represent the types of thrown exceptions
+* `abstract Class<?>[] getParameterTypes()` - returns an array of `Class` objects that represent the formal parameter types
+* `abstract Class<?>[] getExceptionTypes()` - returns an array of `Class` objects that represent the types of thrown exceptions
 * `boolean isVarArgs()` - returns `true` if and only if this method is declared to take a variable number of arguments
 
 
@@ -193,7 +185,7 @@ Here are some methods that this class declares:
 
 
 
-* `Class&lt;?> getReturnType()` - returns a `Class` object that represents the formal return type of the method
+* `Class<?> getReturnType()` - returns a `Class` object that represents the formal return type of the method
 * `Object invoke(Object obj, Object... args)` - invokes the reflected method represented by this `Method` object on the specified object with the specified parameters
 * `boolean isBridge()` - returns `true` if and only if this method is a bridge method
 * `boolean isDefault()` - returns `true` if and only if this method is a _default_ method
@@ -252,7 +244,7 @@ assertEquals(1, method.invoke(object, 1));
 
 ### The Constructor class
 
-The `Constructor&lt;T>` class (where `T` is the class in which the constructor is declared) represents a reflected constructor. The class has methods for reading information about the constructor (name, modifiers, parameter types, and thrown exception types) and creating new instances.
+The `Constructor<T>` class (where `T` is the class in which the constructor is declared) represents a reflected constructor. The class has methods for reading information about the constructor (name, modifiers, parameter types, and thrown exception types) and creating new instances.
 
 Here is a method that this class declares:
 
@@ -321,7 +313,7 @@ Here are some methods that this class declares:
 * `boolean isNamePresent()` - returns `true` if and only if the parameter has a name according to the _class_ file
 * `String getName()` - returns the name of the parameter
 * `int getModifiers()` - returns the Java language modifiers for the parameter
-* `Class&lt;?> getType()` - returns a `Class` object that identifies the declared type for the parameter
+* `Class<?> getType()` - returns a `Class` object that identifies the declared type for the parameter
 * `boolean isSynthetic()` - returns `true` if and only if this parameter is neither explicitly nor implicitly declared in the source code
 * `boolean isVarArgs()` - returns `true` if and only if this method is declared to take a variable number of arguments
 * `boolean isImplicit()` - returns `true` if and only if this parameter is implicitly declared in the source code

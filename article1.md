@@ -271,10 +271,10 @@ The first subgroup of these methods is for determining the _direct supertypes_ (
 
 
 ```
-Class<?> clazz = Integer.class;
-assertEquals(Number.class, clazz.getSuperclass());
+Class<?> clazz = ArrayList.class;
+assertEquals(AbstractList.class, clazz.getSuperclass());
 assertArrayEquals(
-   new Class[]{Comparable.class, Constable.class, ConstantDesc.class},
+   new Class[]{List.class, RandomAccess.class, Cloneable.class, Serializable.class},
    clazz.getInterfaces()
 );
 ```
@@ -460,7 +460,7 @@ System.out.println(clazz.getSimpleName()); // SyntheticClassTest$$Lambda$363/0x0
 
 Hidden classes and interfaces (since Java 15) are a new implementation of runtime generated classes that are not visible to other classes either at compile-time or runtime by class loaders (for example, by the `Class::forName` method). The hidden class is only dynamically created by invoking the `java.lang.invoke.Lookup::defineHiddenClass` method with the _class_ file as the byte array argument.
 
-<sub>Hidden classes had replaced the anonymous classes that were created by the `sun.misc.Unsafe::defineAnonymousClass` method (which was deprecated in Java 15 and removed in Java 17).</sub>
+<sub>Hidden classes replaced the anonymous classes that had been created by the `sun.misc.Unsafe::defineAnonymousClass` method (which was deprecated in Java 15 and removed in Java 17).</sub>
 
 The `Class` class declares the method for determining hidden classes:
 
