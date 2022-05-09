@@ -1,0 +1,15 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.RecordComponent {
++ String getName()
++ Class<?> getType()
++ Method getAccessor()
++ String toString()
++ Class<?> getDeclaringRecord()
+..
+<color:#gray>annotations and generics methods
+}
+
+@enduml

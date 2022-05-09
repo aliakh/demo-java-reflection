@@ -1,0 +1,29 @@
+@startuml
+
+!include class_diagram_header.iuml
+
+class java.lang.reflect.Modifier {
++ {static} boolean isPublic(int)
++ {static} boolean isPrivate(int)
++ {static} boolean isProtected(int)
++ {static} boolean isStatic(int)
++ {static} boolean isFinal(int)
++ {static} boolean isSynchronized(int)
++ {static} boolean isVolatile(int)
++ {static} boolean isTransient(int)
++ {static} boolean isNative(int)
++ {static} boolean isInterface(int)
++ {static} boolean isAbstract(int)
++ {static} boolean isStrict(int)
+..
++ {static} int classModifiers()
++ {static} int interfaceModifiers()
++ {static} int fieldModifiers()
++ {static} int methodModifiers()
++ {static} int constructorModifiers()
++ {static} int parameterModifiers()
+..
++ {static} String toString(int)
+}
+
+@enduml

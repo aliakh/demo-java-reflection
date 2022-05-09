@@ -1,0 +1,53 @@
+@startuml
+
+scale 1.0
+skinparam monochrome true
+skinparam RectangleBackgroundColor white
+
+rectangle class [
+methods of the Class<T> class
+]
+
+rectangle fields [
+methods for fields
+--
+Field getDeclaredField(String name)
+Field[] getDeclaredFields()
+..
+Field getField(String name)
+Field[] getFields()
+]
+
+rectangle  methods [
+methods for methods
+--
+Method getDeclaredMethod(String name, Class<?>... parameterTypes)
+Method[] getDeclaredMethods()
+..
+Method getMethod(String name, Class<?>... parameterTypes)
+Method[] getMethods()
+]
+
+rectangle constructors [
+methods for constructors
+--
+Constructor<T> getDeclaredConstructor(Class<?>... parameterTypes)
+Constructor<?>[] getDeclaredConstructors()
+..
+Constructor<T> getConstructor(Class<?>... parameterTypes)
+Constructor<?>[] getConstructors()
+]
+
+rectangle nested_classes [
+methods for member classes and member interfaces
+--
+Class<?>[] getDeclaredClasses()
+Class<?>[] getClasses()
+]
+
+class -down- fields
+class -down-- methods
+class -down-- constructors
+class -down- nested_classes
+
+@enduml

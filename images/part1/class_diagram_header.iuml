@@ -1,0 +1,7 @@
+scale 1.2
+set namespaceSeparator none
+
+'skinparam monochrome true
+skinparam ClassBackgroundColor white
+skinparam ClassBorderColor black
+skinparam CircledCharacterFontStyle normal

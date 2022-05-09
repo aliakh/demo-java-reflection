@@ -1,0 +1,126 @@
+@startuml
+
+scale 1.0
+set namespaceSeparator none
+
+skinparam monochrome true
+skinparam ClassBackgroundColor white
+skinparam ClassBorderColor black
+skinparam CircledCharacterFontStyle normal
+
+interface java.lang.reflect.Member {
++ Class<?> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+}
+
+class java.lang.reflect.AccessibleObject {
++ {static} void setAccessible(AccessibleObject[],boolean)
++ void setAccessible(boolean)
++ boolean trySetAccessible()
++ <color:#gray>boolean isAccessible()
++ boolean canAccess(Object)
+..
+<color:#gray>annotations methods
+}
+
+abstract class java.lang.reflect.Executable {
++ {abstract}Class<?> getDeclaringClass()
++ {abstract}String getName()
++ {abstract}int getModifiers()
++ boolean isSynthetic()
+..
++ {abstract}Class<?>[] getParameterTypes()
++ int getParameterCount()
++ Parameter[] getParameters()
++ {abstract}Class<?>[] getExceptionTypes()
++ boolean isVarArgs()
+..
+<color:#gray>annotations and generics methods
+}
+
+class java.lang.reflect.Field {
++ void setAccessible(boolean)
+..
++ Class<?> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?> getType()
++ boolean isEnumConstant()
+..
++ Object get(Object)
++ boolean getBoolean(Object)
++ byte getByte(Object)
++ char getChar(Object)
++ short getShort(Object)
++ int getInt(Object)
++ long getLong(Object)
++ float getFloat(Object)
++ double getDouble(Object)
+..
++ void set(Object,Object)
++ void setBoolean(Object,boolean)
++ void setByte(Object,byte)
++ void setChar(Object,char)
++ void setShort(Object,short)
++ void setInt(Object,int)
++ void setLong(Object,long)
++ void setFloat(Object,float)
++ void setDouble(Object,double)
+..
+<color:#gray>annotations and generics methods
+}
+
+class java.lang.reflect.Method {
++ void setAccessible(boolean)
+..
++ Class<?> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?>[] getParameterTypes()
++ int getParameterCount()
++ Class<?>[] getExceptionTypes()
++ boolean isVarArgs()
+..
++ Class<?> getReturnType()
++ Object invoke(Object,Object)
++ boolean isBridge()
++ boolean isDefault()
+..
+<color:#gray>annotations and generics methods
+}
+
+class java.lang.reflect.Constructor {
++ void setAccessible(boolean)
+..
++ Class<T> getDeclaringClass()
++ String getName()
++ int getModifiers()
++ boolean isSynthetic()
+..
++ Class<?>[] getParameterTypes()
++ int getParameterCount()
++ Class<?>[] getExceptionTypes()
++ boolean isVarArgs()
+..
++ T newInstance(Object)
+..
+<color:#gray>annotations and generics methods
+}
+
+java.lang.reflect.Member <|.. java.lang.reflect.Field
+java.lang.reflect.Member <|.. java.lang.reflect.Executable
+
+java.lang.reflect.AccessibleObject <|--- java.lang.reflect.Field
+java.lang.reflect.AccessibleObject <|-- java.lang.reflect.Executable
+
+java.lang.reflect.Field -[hidden]right- java.lang.reflect.Method
+java.lang.reflect.Executable <|-- java.lang.reflect.Method
+java.lang.reflect.Executable <|-- java.lang.reflect.Constructor
+
+@enduml
